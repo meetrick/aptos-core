@@ -14,6 +14,20 @@ module 0x815::m {
     }
 } // end 0x815::m
 
+// -- Sourcified model before bytecode pipeline
+module 0x815::m {
+    enum E {
+        None,
+        Some {
+            0: u64,
+        }
+    }
+    fun t(self: E): u64 {
+        let E::Some{0: x} = self;
+        x
+    }
+}
+
 ============ initial bytecode ================
 
 [variant baseline]

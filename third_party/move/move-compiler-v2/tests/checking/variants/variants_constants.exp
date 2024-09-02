@@ -46,6 +46,41 @@ module 0x815::m {
     }
 } // end 0x815::m
 
+// -- Sourcified model before bytecode pipeline
+module 0x815::m {
+    enum Color {
+        RGB {
+            red: u64,
+            green: u64,
+            blue: u64,
+        }
+        Red,
+        Blue,
+    }
+    fun t0(): bool {
+        let c = Color::Red{};
+        c.RGB.red == 1
+    }
+    fun t1(): bool {
+        let c = Color::Red{};
+        c.RGB.red == 1
+    }
+    fun t2(): bool {
+        let c = Color::Blue{};
+        c.RGB.red == 1
+    }
+    fun t3(): bool {
+        let c = Color::Blue{};
+        c.RGB.red == 1
+    }
+    fun t4(c: &Color) {
+        match (c) {
+            Color::Red{} => abort 1,
+            Color::Blue{} => abort 2,
+        }
+    }
+}
+
 
 Diagnostics:
 error: match not exhaustive

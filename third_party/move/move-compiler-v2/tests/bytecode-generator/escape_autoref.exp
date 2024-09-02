@@ -27,6 +27,33 @@ module 0x42::m {
     }
 } // end 0x42::m
 
+// -- Sourcified model before bytecode pipeline
+module 0x42::m {
+    struct Object has copy, drop {
+        inner: address,
+    }
+    struct ObjectCore has key {
+        owner: address,
+    }
+    fun make(): Object {
+        abort 0
+    }
+    fun owner_correct(o: Object): address
+        acquires ObjectCore
+    {
+        let addr = o.inner;
+        borrow_global<ObjectCore>(addr).owner
+    }
+    fun owner_read_ref_missing(o: Object): address
+        acquires ObjectCore
+    {
+        borrow_global<ObjectCore>(o.inner).owner
+    }
+    fun will_autoref(): address {
+        make().inner
+    }
+}
+
 ============ initial bytecode ================
 
 [variant baseline]

@@ -39,3 +39,34 @@ module 0x42::test {
         }
     }
 } // end 0x42::test
+
+// -- Sourcified model before bytecode pipeline
+module 0x42::test {
+    enum E1 {
+        V1 {
+            0: S0,
+        }
+        V2 {
+            0: S1,
+        }
+    }
+    struct S0 {
+        0: u8,
+    }
+    struct S1 {
+        0: bool,
+        1: S0,
+    }
+    fun match(x: E1) {
+        match (x) {
+            E1::V1{0: S0{0: _x}} => (),
+            E1::V2{0: S1{0: _x,1: S0{0: _y}}} => (),
+        }
+    }
+    fun nested(x: S1) {
+        let S1{0: _x,1: S0{0: _y}} = x;
+    }
+    fun simple(x: S0) {
+        let S0{0: _x} = x;
+    }
+}

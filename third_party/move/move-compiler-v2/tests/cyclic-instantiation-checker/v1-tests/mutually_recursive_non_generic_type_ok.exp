@@ -10,3 +10,16 @@ module 0x8675309::M {
         M::f<u64>()
     }
 } // end 0x8675309::M
+
+// -- Sourcified model before bytecode pipeline
+module 0x8675309::M {
+    struct S<T> {
+        f: T,
+    }
+    fun f<T>() {
+        g<S<T>>()
+    }
+    fun g<T>() {
+        f<u64>()
+    }
+}

@@ -18,6 +18,24 @@ module 0x42::pack_unpack {
     }
 } // end 0x42::pack_unpack
 
+// -- Sourcified model before bytecode pipeline
+module 0x42::pack_unpack {
+    struct T {
+        h: u64,
+    }
+    struct S {
+        f: u64,
+        g: T,
+    }
+    fun pack(x: u64, y: u64): S {
+        S{f: x,g: T{h: y}}
+    }
+    fun unpack(s: S): (u64, u64) {
+        let S{f: f,g: T{h: h}} = s;
+        (f, h)
+    }
+}
+
 ============ initial bytecode ================
 
 [variant baseline]

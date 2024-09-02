@@ -40,6 +40,45 @@ module 0x8675309::M {
     }
 } // end 0x8675309::M
 
+// -- Sourcified model before bytecode pipeline
+module 0x8675309::M {
+    struct S {
+        f: u64,
+    }
+    fun bar(_s: &mut u64, _u: u64) {
+    }
+    fun foo(_s: &S, _u: u64) {
+    }
+    fun t0(s: &mut S) {
+        let x = 0;
+        let f = {
+            x = x + 1;
+            &mut {
+                x = x + 1;
+                1;
+                s
+            }.f
+        };
+        if (true) {
+            x = x + 1;
+            foo(/*freeze*/s, {
+                *{
+                    x = x + 1;
+                    f
+                } = 0;
+                1
+            })
+        } else x = x + 1;
+        if (x == 4) () else abort 0;
+    }
+    fun t1(s: &mut S) {
+        bar(&mut s.f, {
+            s.f = 0;
+            1
+        })
+    }
+}
+
 
 Diagnostics:
 error: cannot freeze value which is still mutably borrowed

@@ -55,6 +55,40 @@ module 0x8675309::M {
     }
 } // end 0x8675309::M
 
+// -- Sourcified model before bytecode pipeline
+module 0x8675309::M {
+    struct T has drop {
+        s: S,
+    }
+    struct G has drop, key {
+    }
+    struct S has drop {
+        f: u64,
+    }
+    fun t0(s: &mut S) {
+        *s = S{f: 2};
+        *s = S{f: 0};
+        *&0 = 1;
+        let x = 0;
+        let x_ref = &mut x;
+        let x_ref = /*freeze*/x_ref;
+        *x_ref = 0;
+        let g = S{f: 0};
+        let g_ref = &mut g;
+        *g_ref = S{f: 2};
+        let t = T{s: g};
+        let t_ref = &mut t;
+        let g = S{f: 2};
+        t_ref.s = g;
+        let g = S{f: 3};
+        t_ref.s = g;
+    }
+    fun t1() {
+        let x = 3;
+        *&mut x = 5;
+    }
+}
+
 
 Diagnostics:
 error: expected `&mut` but found `&M::S`

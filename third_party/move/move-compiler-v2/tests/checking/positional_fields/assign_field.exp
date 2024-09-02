@@ -94,3 +94,74 @@ module 0x42::test {
         Tuple()
     }
 } // end 0x42::test
+
+// -- Sourcified model before bytecode pipeline
+module 0x42::test {
+    enum E {
+        V1 {
+            0: u8,
+            1: bool,
+        }
+        V2 {
+            0: S3,
+        }
+    }
+    struct S0 {
+        x: u8,
+    }
+    struct S1 {
+        0: u64,
+        1: bool,
+    }
+    struct S2 {
+        0: S0,
+        1: u8,
+    }
+    struct S3 {
+        0: S2,
+        1: S0,
+        2: S2,
+    }
+    fun assign0(a: u64, b: bool) {
+        let x = S1{0: a,1: b};
+        while (x.1) {
+            x = S1{0: x.0 - 1,1: x.0 >= 1};
+        }
+    }
+    fun assign1(x: S1): u64 {
+        let count = 0;
+        while (x.1) {
+            let y = if (x.0 > 0) x.0 - 1 else 0;
+            x = S1{0: y,1: y >= 1};
+            count = count + 1;
+        };
+        count
+    }
+    fun assign_chained(x: S3) {
+        x.0.0.x + x.1.x + x.2.0.x;
+        x.0.0.x = 0u8;
+        x.1.x = 1u8;
+        x.2.0.x = 2u8;
+    }
+    fun assign_enum(x: &mut E) {
+        match (x) {
+            E::V1{0: x,1: y} => {
+                *x = 42u8;
+                *y = true;
+            },
+            E::V2{0: x} => {
+                x.0.0.x = 0u8;
+                x.1.x = 1u8;
+                x.2.0.x = 2u8;
+            },
+        }
+    }
+    fun simple(x: S1) {
+        x.0 = 42;
+        x.1 = true;
+    }
+    fun simple_ref(x: &mut S1) {
+        x.0 = 42;
+        x.1 = true;
+    }
+}

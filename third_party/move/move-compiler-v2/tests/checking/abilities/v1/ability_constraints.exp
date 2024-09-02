@@ -245,3 +245,140 @@ module 0x42::M {
         }
     }
 } // end 0x42::M
+
+// -- Sourcified model before bytecode pipeline
+module 0x42::M {
+    struct Box<T> has copy, drop, store, key {
+        f: T,
+    }
+    struct Pair<T1, T2> has copy, drop, store, key {
+        f1: T1,
+        f2: T2,
+    }
+    struct R has store, key {
+    }
+    struct S has copy, drop, store, key {
+    }
+    struct Sc<phantom T: copy> {
+    }
+    struct Scds<phantom T: copy + drop + store> {
+    }
+    struct Sd<phantom T: drop> {
+    }
+    struct Sk<phantom T: key> {
+    }
+    struct Ss<phantom T: store> {
+    }
+    struct Ssk<phantom T: store + key> {
+    }
+    fun c<T: copy>() {
+    }
+    fun cds<T: copy + drop + store>() {
+    }
+    fun d<T: drop>() {
+    }
+    fun k<T: key>() {
+    }
+    fun s<T: store>() {
+    }
+    fun sk<T: store + key>() {
+    }
+    fun t1<Tc: copy, Td: drop, Ts: store, Tk: key, Tcd: copy + drop, Tcs: copy + store, Tds: drop + store, Tsk: store + key, Tcds: copy + drop + store>() {
+        c<u64>();
+        d<signer>();
+        s<bool>();
+        cds<address>();
+        c<vector<u64>>();
+        d<vector<signer>>();
+        s<vector<bool>>();
+        cds<vector<address>>();
+        let Sc<u64>{dummy_field: _} = Sc<u64>{dummy_field: false};
+        let Sd<signer>{dummy_field: _} = Sd<signer>{dummy_field: false};
+        let Ss<bool>{dummy_field: _} = Ss<bool>{dummy_field: false};
+        let Scds<address>{dummy_field: _} = Scds<address>{dummy_field: false};
+        let Sc<vector<u64>>{dummy_field: _} = Sc<vector<u64>>{dummy_field: false};
+        let Sd<vector<signer>>{dummy_field: _} = Sd<vector<signer>>{dummy_field: false};
+        let Ss<vector<bool>>{dummy_field: _} = Ss<vector<bool>>{dummy_field: false};
+        let Scds<vector<address>>{dummy_field: _} = Scds<vector<address>>{dummy_field: false};
+        c<Tc>();
+        c<Tcd>();
+        c<Tcs>();
+        c<Tcds>();
+        d<Td>();
+        d<Tcd>();
+        d<Tds>();
+        d<Tcds>();
+        s<Ts>();
+        s<Tcs>();
+        s<Tds>();
+        s<Tsk>();
+        s<Tcds>();
+        k<Tk>();
+        k<Tsk>();
+        sk<Tsk>();
+        cds<Tcds>();
+        let Sc<Tc>{dummy_field: _} = Sc<Tc>{dummy_field: false};
+        let Sc<Tcd>{dummy_field: _} = Sc<Tcd>{dummy_field: false};
+        let Sc<Tcs>{dummy_field: _} = Sc<Tcs>{dummy_field: false};
+        let Sc<Tcds>{dummy_field: _} = Sc<Tcds>{dummy_field: false};
+        let Sd<Td>{dummy_field: _} = Sd<Td>{dummy_field: false};
+        let Sd<Tcd>{dummy_field: _} = Sd<Tcd>{dummy_field: false};
+        let Sd<Tds>{dummy_field: _} = Sd<Tds>{dummy_field: false};
+        let Sd<Tcds>{dummy_field: _} = Sd<Tcds>{dummy_field: false};
+        let Ss<Ts>{dummy_field: _} = Ss<Ts>{dummy_field: false};
+        let Ss<Tcs>{dummy_field: _} = Ss<Tcs>{dummy_field: false};
+        let Ss<Tds>{dummy_field: _} = Ss<Tds>{dummy_field: false};
+        let Ss<Tsk>{dummy_field: _} = Ss<Tsk>{dummy_field: false};
+        let Ss<Tcds>{dummy_field: _} = Ss<Tcds>{dummy_field: false};
+        let Sk<Tk>{dummy_field: _} = Sk<Tk>{dummy_field: false};
+        let Sk<Tsk>{dummy_field: _} = Sk<Tsk>{dummy_field: false};
+        let Ssk<Tsk>{dummy_field: _} = Ssk<Tsk>{dummy_field: false};
+        let Scds<Tcds>{dummy_field: _} = Scds<Tcds>{dummy_field: false};
+        c<S>();
+        c<Box<S>>();
+        c<Pair<Box<S>, S>>();
+        d<S>();
+        d<Box<S>>();
+        d<Pair<Box<S>, S>>();
+        s<S>();
+        s<R>();
+        s<Box<S>>();
+        s<Box<R>>();
+        s<Pair<Box<S>, S>>();
+        s<Pair<R, Box<Pair<R, S>>>>();
+        k<R>();
+        k<Box<R>>();
+        k<Pair<R, Box<R>>>();
+        k<Pair<R, Box<Pair<R, S>>>>();
+        sk<R>();
+        sk<Box<R>>();
+        sk<Pair<R, Box<R>>>();
+        sk<Pair<R, Box<Pair<R, S>>>>();
+        cds<S>();
+        cds<Box<S>>();
+        cds<Pair<Box<S>, S>>();
+        let Sc<S>{dummy_field: _} = Sc<S>{dummy_field: false};
+        let Sc<Box<S>>{dummy_field: _} = Sc<Box<S>>{dummy_field: false};
+        let Sc<Pair<Box<S>, S>>{dummy_field: _} = Sc<Pair<Box<S>, S>>{dummy_field: false};
+        let Sd<S>{dummy_field: _} = Sd<S>{dummy_field: false};
+        let Sd<Box<S>>{dummy_field: _} = Sd<Box<S>>{dummy_field: false};
+        let Sd<Pair<Box<S>, S>>{dummy_field: _} = Sd<Pair<Box<S>, S>>{dummy_field: false};
+        let Ss<S>{dummy_field: _} = Ss<S>{dummy_field: false};
+        let Ss<R>{dummy_field: _} = Ss<R>{dummy_field: false};
+        let Ss<Box<S>>{dummy_field: _} = Ss<Box<S>>{dummy_field: false};
+        let Ss<Box<R>>{dummy_field: _} = Ss<Box<R>>{dummy_field: false};
+        let Ss<Pair<Box<S>, S>>{dummy_field: _} = Ss<Pair<Box<S>, S>>{dummy_field: false};
+        let Ss<Pair<R, Box<Pair<R, S>>>>{dummy_field: _} = Ss<Pair<R, Box<Pair<R, S>>>>{dummy_field: false};
+        let Sk<R>{dummy_field: _} = Sk<R>{dummy_field: false};
+        let Sk<Box<R>>{dummy_field: _} = Sk<Box<R>>{dummy_field: false};
+        let Sk<Pair<R, Box<R>>>{dummy_field: _} = Sk<Pair<R, Box<R>>>{dummy_field: false};
+        let Sk<Pair<R, Box<Pair<R, S>>>>{dummy_field: _} = Sk<Pair<R, Box<Pair<R, S>>>>{dummy_field: false};
+        let Ssk<R>{dummy_field: _} = Ssk<R>{dummy_field: false};
+        let Ssk<Box<R>>{dummy_field: _} = Ssk<Box<R>>{dummy_field: false};
+        let Ssk<Pair<R, Box<R>>>{dummy_field: _} = Ssk<Pair<R, Box<R>>>{dummy_field: false};
+        let Ssk<Pair<R, Box<Pair<R, S>>>>{dummy_field: _} = Ssk<Pair<R, Box<Pair<R, S>>>>{dummy_field: false};
+        let Scds<S>{dummy_field: _} = Scds<S>{dummy_field: false};
+        let Scds<Box<S>>{dummy_field: _} = Scds<Box<S>>{dummy_field: false};
+        let Scds<Pair<Box<S>, S>>{dummy_field: _} = Scds<Pair<Box<S>, S>>{dummy_field: false};
+    }
+}

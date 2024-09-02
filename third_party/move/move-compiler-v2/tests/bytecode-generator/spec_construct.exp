@@ -12,6 +12,19 @@ module 0x42::m {
     }
 } // end 0x42::m
 
+// -- Sourcified model before bytecode pipeline
+module 0x42::m {
+    struct E {
+        k: u8,
+    }
+    struct S {
+        data: vector<E>,
+    }
+    public fun foo(v: &S): u8 {
+        vector::borrow<E>(&v.data, 0).k
+    }
+}
+
 ============ initial bytecode ================
 
 [variant baseline]

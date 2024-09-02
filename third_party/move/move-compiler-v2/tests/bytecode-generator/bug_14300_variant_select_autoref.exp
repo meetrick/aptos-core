@@ -17,6 +17,23 @@ module 0x815::m {
     }
 } // end 0x815::m
 
+// -- Sourcified model before bytecode pipeline
+module 0x815::m {
+    enum Positional has drop {
+        A {
+            0: u8,
+        }
+        B {
+            0: u8,
+        }
+    }
+    fun test_common_access(): u8 {
+        let x = Positional::A{0: 42u8};
+        x.A.0 = 19u8;
+        20u8
+    }
+}
+
 ============ initial bytecode ================
 
 [variant baseline]

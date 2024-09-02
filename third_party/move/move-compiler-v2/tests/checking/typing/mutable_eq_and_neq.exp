@@ -43,3 +43,44 @@ module 0x8675309::M {
         }
     }
 } // end 0x8675309::M
+
+// -- Sourcified model before bytecode pipeline
+module 0x8675309::M {
+    struct B {
+        f: bool,
+    }
+    struct P {
+        b1: B,
+        b2: B,
+    }
+    struct S {
+        f: u64,
+        g: u64,
+    }
+    fun t(r1: &mut u64, r2: &mut u64, s: &mut S) {
+        /*freeze*/r1 == /*freeze*/r1;
+        /*freeze*/r1 == /*freeze*/r2;
+        /*freeze*/r2 == /*freeze*/r2;
+        /*freeze*/r2 == /*freeze*/r2;
+        /*freeze*/r1 != /*freeze*/r1;
+        /*freeze*/r1 != /*freeze*/r2;
+        /*freeze*/r2 != /*freeze*/r2;
+        /*freeze*/r2 != /*freeze*/r2;
+        /*freeze*/&mut s.f == /*freeze*/&mut s.f;
+        /*freeze*/&mut s.f == /*freeze*/&mut s.g;
+        /*freeze*/&mut s.g == /*freeze*/&mut s.f;
+        /*freeze*/&mut s.g == /*freeze*/&mut s.g;
+        /*freeze*/&mut s.f != /*freeze*/&mut s.f;
+        /*freeze*/&mut s.f != /*freeze*/&mut s.g;
+        /*freeze*/&mut s.g != /*freeze*/&mut s.f;
+        /*freeze*/&mut s.g != /*freeze*/&mut s.g;
+    }
+    fun t1(p: &mut P) {
+        let comp = /*freeze*/&mut p.b1 == /*freeze*/&mut p.b2;
+        p.b1.f = comp
+    }
+    fun t2(p: &mut P) {
+        let comp = /*freeze*/&mut p.b1 != /*freeze*/&mut p.b2;
+        p.b1.f = comp
+    }
+}

@@ -24,3 +24,18 @@ module 0x8675309::M {
         }
     }
 } // end 0x8675309::M
+
+// -- Sourcified model before bytecode pipeline
+module 0x8675309::M {
+    struct R has key {
+    }
+    fun t(account: &signer)
+        acquires R
+    {
+        let _ = exists<R>(0x0);
+        let () = move_to<R>(account, R{dummy_field: false});
+        let _ = borrow_global<R>(0x0);
+        let _ = borrow_global_mut<R>(0x0);
+        let R{dummy_field: _} = move_from<R>(0x0);
+    }
+}

@@ -3258,8 +3258,10 @@ pub struct TypeDisplayContext<'a> {
     pub builder_struct_table: Option<&'a BTreeMap<(ModuleId, StructId), QualifiedSymbol>>,
     /// If present, the module name in which context the type is displayed. Used to shorten type names.
     pub module_name: Option<ModuleName>,
-    /// Whether to display type variables. If false, the will be displayed as `_`, otherwise as `_<n>`.
+    /// Whether to display type variables. If false, they will be displayed as `_`, otherwise as `_<n>`.
     pub display_type_vars: bool,
+    /// Overloaded module names which require address qualification
+    pub overloaded_modules: BTreeSet<ModuleId>,
 }
 
 impl<'a> TypeDisplayContext<'a> {
@@ -3271,6 +3273,7 @@ impl<'a> TypeDisplayContext<'a> {
             builder_struct_table: None,
             module_name: None,
             display_type_vars: false,
+            overloaded_modules: env.overloaded_modules(),
         }
     }
 
@@ -3292,6 +3295,7 @@ impl<'a> TypeDisplayContext<'a> {
             builder_struct_table: None,
             module_name: None,
             display_type_vars: false,
+            overloaded_modules: env.overloaded_modules(),
         }
     }
 
@@ -3433,9 +3437,15 @@ impl<'a> TypeDisplay<'a> {
             qsym.display(self.context.env).to_string()
         } else {
             let struct_env = env.get_module(mid).into_struct(sid);
+            let module_name = struct_env.module_env.get_name();
+            let module_str = if self.context.overloaded_modules.contains(&mid) {
+                module_name.display_full(env).to_string()
+            } else {
+                module_name.display(env).to_string()
+            };
             format!(
                 "{}::{}",
-                struct_env.module_env.get_name().display(env),
+                module_str,
                 struct_env.get_name().display(env.symbol_pool())
             )
         };

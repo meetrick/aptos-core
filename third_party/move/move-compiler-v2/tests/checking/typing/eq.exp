@@ -34,3 +34,39 @@ module 0x8675309::M {
         Tuple()
     }
 } // end 0x8675309::M
+
+// -- Sourcified model before bytecode pipeline
+module 0x8675309::M {
+    struct G<T> has drop {
+        f: T,
+    }
+    struct R {
+        f: u64,
+    }
+    struct S has drop {
+        u: u64,
+    }
+    fun t0(r: &R, r_mut: &mut R, s: S, s_ref: &S, s_mut: &mut S) {
+        false;
+        false;
+        false;
+        false;
+        false;
+        &0 == &1;
+        false;
+        false;
+        &s == s_ref;
+        /*freeze*/&mut s == s_ref;
+        /*freeze*/&mut s == /*freeze*/s_mut;
+        &s == /*freeze*/s_mut;
+        s_ref == /*freeze*/s_mut;
+        /*freeze*/s_mut == /*freeze*/s_mut;
+        S{u: 0} == s;
+        r == r;
+        /*freeze*/r_mut == /*freeze*/r_mut;
+        r == /*freeze*/r_mut;
+        /*freeze*/r_mut == r;
+        G<u64>{f: 1} == G<u64>{f: 1};
+        G<u64>{f: 1} == G<u64>{f: 1};
+    }
+}

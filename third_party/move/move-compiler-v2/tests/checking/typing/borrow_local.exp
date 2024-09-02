@@ -41,3 +41,37 @@ module 0x8675309::M {
         }
     }
 } // end 0x8675309::M
+
+// -- Sourcified model before bytecode pipeline
+module 0x8675309::M {
+    struct R {
+    }
+    struct S has drop {
+    }
+    fun t0(b: bool, u: u64, s: S, r: R): R {
+        &b;
+        &mut b;
+        &u;
+        &mut u;
+        &s;
+        &mut s;
+        &r;
+        &mut r;
+        r
+    }
+    fun t1(): R {
+        let b = true;
+        let u = 0;
+        let s = S{dummy_field: false};
+        let r = R{dummy_field: false};
+        &b;
+        &mut b;
+        &u;
+        &mut u;
+        &s;
+        &mut s;
+        &r;
+        &mut r;
+        r
+    }
+}

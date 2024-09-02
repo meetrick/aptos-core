@@ -10,3 +10,10 @@ module 0x42::M {
         choose s: M::S: v: Eq<u64>(select M::S.x<M::S>(s), 0)
     }
 } // end 0x42::M
+
+// -- Sourcified model before bytecode pipeline
+module 0x42::M {
+    struct S {
+        x: u64,
+    }
+}

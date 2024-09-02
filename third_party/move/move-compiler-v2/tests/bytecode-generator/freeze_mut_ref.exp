@@ -103,6 +103,71 @@ module 0x42::freeze_mut_ref {
     }
 } // end 0x42::freeze_mut_ref
 
+// -- Sourcified model before bytecode pipeline
+module 0x42::freeze_mut_ref {
+    struct G {
+        f: u64,
+    }
+    struct S has drop {
+    }
+    public fun borrow_mut<Element>(map: &mut vector<Element>): &Element {
+        /*freeze*/vector::borrow_mut<Element>(map, 0)
+    }
+    public fun borrow_mut2<Element>(v: &mut Element): &Element {
+        /*freeze*/v
+    }
+    public fun borrow_mut3<Element>(v1: &mut Element, v2: &Element): &Element {
+        if (true) /*freeze*/v1 else v2
+    }
+    public fun borrow_mut4<Element>(v: &mut Element): &Element {
+        /*freeze*/v
+    }
+    fun t0() {
+        let x = /*freeze*/&mut 0;
+        x;
+    }
+    fun t1(s: &mut S): &S {
+        /*freeze*/s
+    }
+    fun t2(u1: &mut u64, u2: &mut u64): (&u64, &mut u64) {
+        (/*freeze*/u1, u2)
+    }
+    public fun t4() {
+        let x;
+        let y;
+        (x,y) = (/*freeze*/&mut 0, /*freeze*/&mut 0);
+    }
+    public fun t5(s: &mut G) {
+        let x = 0;
+        let f = &mut {
+            x = x + 1;
+            s
+        }.f;
+        let g = &mut {
+            x = x + 1;
+            s
+        }.f;
+        let y = &mut 2;
+        let z;
+        *{
+            *f = 0;
+            z = /*freeze*/y;
+            g
+        } = 2;
+    }
+    fun t6(cond: bool, s: &mut S, other: &S) {
+        let x;
+        if (cond) x = /*freeze*/copy s else x = other;
+    }
+    fun t7(cond: bool, s: &mut S, other: &S) {
+        let _x;
+        _x = if (cond) /*freeze*/s else other;
+    }
+    fun t8(cond: bool, s: &mut S, other: &S) {
+        let _x = if (cond) /*freeze*/s else other;
+    }
+}
+
 ============ initial bytecode ================
 
 [variant baseline]

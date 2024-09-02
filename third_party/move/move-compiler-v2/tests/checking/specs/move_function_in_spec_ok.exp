@@ -38,3 +38,30 @@ module 0x42::move_function_in_spec {
         Tuple()
     }
 } // end 0x42::move_function_in_spec
+
+// -- Sourcified model before bytecode pipeline
+module 0x42::move_function_in_spec {
+    struct TypeInfo has copy, drop, store, key {
+        account_address: address,
+    }
+    fun foo<T>() {
+        let type_info = type_of<T>();
+        let account_address = type_info.account_address;
+
+        /* spec {
+          assert move_function_in_spec::$no_change(account_address, account_address);
+          assert Eq<address>(account_address, select move_function_in_spec::TypeInfo.account_address<move_function_in_spec::TypeInfo>(move_function_in_spec::$type_of<#0>()));
+        }
+         */
+        ;
+    }
+    public fun no_change(target: address, new_addr: address): bool
+        acquires TypeInfo
+    {
+        let ty = borrow_global<TypeInfo>(target);
+        ty.account_address == new_addr
+    }
+    public fun type_of<T>(): TypeInfo {
+        abort 1
+    }
+}

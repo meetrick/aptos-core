@@ -34,6 +34,34 @@ module 0x815::m {
     }
 } // end 0x815::m
 
+// -- Sourcified model before bytecode pipeline
+module 0x815::m {
+    struct MyMap has key {
+        table: Table<address, ValueWrap>,
+    }
+    struct Table<T1, T2> has store {
+        x: T1,
+        y: T2,
+    }
+    struct ValueWrap has drop, store {
+        val: u64,
+    }
+    fun contains<T1: drop, T2: drop>(self: &Table<T1, T2>, _key: T1): bool {
+        true
+    }
+    fun add<T1: drop, T2: drop>(self: &mut Table<T1, T2>, _key: T1, _val: T2) {
+    }
+    public fun add_when_missing(key: address, val: u64)
+        acquires MyMap
+    {
+        let my_map = borrow_global_mut<MyMap>(0x815);
+        if (!contains<address,ValueWrap>(&my_map.table, key)) {
+            let wrap = ValueWrap{val: val};
+            add<address,ValueWrap>(&mut my_map.table, key, wrap);
+        }
+    }
+}
+
 ============ initial bytecode ================
 
 [variant baseline]

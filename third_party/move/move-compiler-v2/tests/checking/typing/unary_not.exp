@@ -16,3 +16,19 @@ module 0x8675309::M {
         }
     }
 } // end 0x8675309::M
+
+// -- Sourcified model before bytecode pipeline
+module 0x8675309::M {
+    struct R {
+        f: bool,
+    }
+    fun t0(x: bool, r: R) {
+        false;
+        true;
+        !x;
+        !(copy x);
+        !(move x);
+        !r.f;
+        let R{f: _} = r;
+    }
+}

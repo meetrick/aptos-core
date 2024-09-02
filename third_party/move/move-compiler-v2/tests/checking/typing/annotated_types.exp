@@ -15,3 +15,18 @@ module 0x8675309::M {
         Tuple()
     }
 } // end 0x8675309::M
+
+// -- Sourcified model before bytecode pipeline
+module 0x8675309::M {
+    struct R {
+    }
+    struct S has drop {
+    }
+    fun t() {
+        ();
+        0;
+        S{dummy_field: false};
+        R{dummy_field: _} = R{dummy_field: false};
+        (_,_,R{dummy_field: _}) = (0, S{dummy_field: false}, R{dummy_field: false});
+    }
+}

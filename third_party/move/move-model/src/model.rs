@@ -179,9 +179,9 @@ impl Loc {
 
     /// Creates a location which encloses all the locations in the provided slice,
     /// which must not be empty. All locations are expected to be in the same file.
-    pub fn enclosing(locs: &[&Loc]) -> Loc {
+    pub fn enclosing(locs: &[Loc]) -> Loc {
         assert!(!locs.is_empty());
-        let loc = locs[0];
+        let loc = &locs[0];
         let mut start = loc.span.start();
         let mut end = loc.span.end();
         for l in locs.iter().skip(1) {
@@ -376,6 +376,12 @@ impl NodeId {
 
     pub fn as_usize(self) -> usize {
         self.0
+    }
+}
+
+impl AsRef<NodeId> for NodeId {
+    fn as_ref(&self) -> &NodeId {
+        self
     }
 }
 
@@ -2595,6 +2601,22 @@ impl GlobalEnv {
         };
         format!("{}({}){}", type_params_str, params_str, result_str)
     }
+
+    /// Compute the set of modules in the environment whose names are
+    /// overloaded and require address qualification when referred to
+    /// together.
+    pub fn overloaded_modules(&self) -> BTreeSet<ModuleId> {
+        let mut seen_modules = BTreeSet::new();
+        self.get_modules()
+            .filter_map(|m| {
+                if !seen_modules.insert(m.get_name().name()) {
+                    Some(m.get_id())
+                } else {
+                    None
+                }
+            })
+            .collect()
+    }
 }
 
 // =================================================================================================
@@ -3725,6 +3747,15 @@ impl<'env> StructEnv<'env> {
             .collect();
         TypeDisplayContext::new_with_params(self.module_env.env, type_param_names)
     }
+
+    /// Produce a TypeDisplayContext to print types within the scope of this env, which shortens
+    /// module names for containing module.
+    pub fn get_type_display_ctx_shortcut_module(&self) -> TypeDisplayContext<'env> {
+        TypeDisplayContext {
+            module_name: Some(self.module_env.get_name().clone()),
+            ..self.get_type_display_ctx()
+        }
+    }
 }
 
 // =================================================================================================
@@ -4743,10 +4774,9 @@ impl<'env> FunctionEnv<'env> {
     }
 
     fn definition_view(&'env self) -> Option<FunctionDefinitionView<'env, CompiledModule>> {
-        assert!(
-            !self.is_inline(),
-            "attempt to access bytecode info for inline function"
-        );
+        if self.is_inline() {
+            return None;
+        }
         let module = self.module_env.data.compiled_module.as_ref()?;
         Some(FunctionDefinitionView::new(
             module,
@@ -4762,6 +4792,15 @@ impl<'env> FunctionEnv<'env> {
             .map(|param| param.0)
             .collect();
         TypeDisplayContext::new_with_params(self.module_env.env, type_param_names)
+    }
+
+    /// Produce a TypeDisplayContext to print types within the scope of this env, which shortens
+    /// module names for containing module.
+    pub fn get_type_display_ctx_shortcut_module(&self) -> TypeDisplayContext<'env> {
+        TypeDisplayContext {
+            module_name: Some(self.module_env.get_name().clone()),
+            ..self.get_type_display_ctx()
+        }
     }
 }
 

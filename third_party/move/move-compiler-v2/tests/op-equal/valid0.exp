@@ -108,6 +108,95 @@ module 0x42::test {
     }
 } // end 0x42::test
 
+// -- Sourcified model before bytecode pipeline
+module 0x42::test {
+    struct Coin has drop, key {
+        0: u256,
+    }
+    struct Wrapper<T> has drop, key {
+        0: T,
+    }
+    fun add1_new(x: u256): u256 {
+        x = x + 1u256;
+        x
+    }
+    fun add1_old(x: u256): u256 {
+        x = x + 1u256;
+        x
+    }
+    fun coin_inc_new_1(self: &mut Coin) {
+        {
+            let $t1 = &mut self.0;
+            *$t1 = *$t1 + 1u256
+        };
+    }
+    fun coin_inc_new_2(self: &mut Coin) {
+        let p = &mut self.0;
+        *p = *p + 1u256;
+    }
+    fun coin_inc_old_1(self: &mut Coin) {
+        self.0 = self.0 + 1u256;
+    }
+    fun coin_inc_old_2(self: &mut Coin) {
+        let p = &mut self.0;
+        *p = *p + 1u256;
+    }
+    fun inc_coin_at(addr: address)
+        acquires Coin
+    {
+        let coin = borrow_global_mut<Coin>(addr);
+        {
+            let $t1 = &mut coin.0;
+            *$t1 = *$t1 + 1u256
+        };
+    }
+    fun inc_new(x: &mut u256) {
+        {
+            let $t1 = x;
+            *$t1 = *$t1 + 1u256
+        };
+    }
+    fun inc_old(x: &mut u256) {
+        *x = *x + 1u256;
+    }
+    fun inc_vec_coin_new(x: vector<Coin>, index: u64) {
+        {
+            let $t1 = &mut vector::borrow_mut<Coin>(&mut x, index).0;
+            *$t1 = *$t1 + 1u256
+        };
+    }
+    fun inc_vec_coin_old(x: vector<Coin>, index: u64) {
+        vector::borrow_mut<Coin>(&mut x, index).0 = vector::borrow<Coin>(&x, index).0 + 1u256;
+    }
+    fun inc_vec_new(x: &mut vector<u256>, index: u64) {
+        {
+            let $t1 = vector::borrow_mut<u256>(x, index);
+            *$t1 = *$t1 + 1u256
+        };
+    }
+    fun inc_vec_old(x: vector<u256>, index: u64) {
+        *vector::borrow_mut<u256>(&mut x, index) = *vector::borrow<u256>(&x, index) + 1u256;
+    }
+    fun inc_vec_wrapped_coin_new(x: vector<Wrapper<Coin>>, index: u64) {
+        {
+            let $t1 = &mut vector::borrow_mut<Wrapper<Coin>>(&mut x, index).0.0;
+            *$t1 = *$t1 + 1u256
+        };
+    }
+    fun inc_vec_wrapped_coin_old(x: vector<Wrapper<Coin>>, index: u64) {
+        vector::borrow_mut<Wrapper<Coin>>(&mut x, index).0.0 = vector::borrow<Wrapper<Coin>>(&x, index).0.0 + 1u256;
+    }
+    fun inc_wrapped_coin_new(x: &mut Wrapper<Coin>) {
+        {
+            let $t1 = &mut x.0.0;
+            *$t1 = *$t1 + 1u256
+        };
+    }
+    fun inc_wrapped_coin_old(x: &mut Wrapper<Coin>) {
+        x.0.0 = x.0.0 + 1u256;
+    }
+}
+
 ============ initial bytecode ================
 
 [variant baseline]

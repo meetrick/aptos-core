@@ -58,6 +58,51 @@ module 0xc0ffee::m {
     }
 } // end 0xc0ffee::m
 
+// -- Sourcified model before bytecode pipeline
+module 0xc0ffee::m {
+    struct Box has drop {
+        x: u64,
+    }
+    enum Inner {
+        Inner1 {
+            x: u64,
+        }
+        Inner2 {
+            x: u64,
+            y: u64,
+        }
+    }
+    enum Outer {
+        None,
+        One {
+            i: Inner,
+        }
+        Two {
+            i: Inner,
+            b: Box,
+        }
+    }
+    public fun condition_requires_copy(o: Outer): Outer {
+        match (o) {
+            Outer::One{i: i} if consume(i) => Outer::One{i: i},
+            o => o,
+        }
+    }
+    fun consume(self: Inner): bool {
+        match (self) {
+            Inner::Inner1{x: _} => (),
+            Inner::Inner2{x: _,y: _} => (),
+        };
+        true
+    }
+    public fun matched_value_not_consumed(o: Outer) {
+        match (o) {
+            Outer::One{i: _} => (),
+            _ => (),
+        }
+    }
+}
+
 ============ initial bytecode ================
 
 [variant baseline]

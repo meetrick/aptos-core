@@ -20,6 +20,19 @@ module 0xc0ffee::m {
     }
 } // end 0xc0ffee::m
 
+// -- Sourcified model before bytecode pipeline
+module 0xc0ffee::m {
+    struct S {
+    }
+    public fun bar() {
+        let s = S{dummy_field: false};
+        let _ = s;
+    }
+    public fun foo(s: S) {
+        let _ = s;
+    }
+}
+
 ============ initial bytecode ================
 
 [variant baseline]

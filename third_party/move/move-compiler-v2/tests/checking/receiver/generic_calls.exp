@@ -45,3 +45,43 @@ module 0x42::m {
         }
     }
 } // end 0x42::m
+
+// -- Sourcified model before bytecode pipeline
+module 0x42::m {
+    struct S<T> {
+        x: T,
+    }
+    fun id<T>(self: S<T>): S<T> {
+        self
+    }
+    inline fun inlined<T>(f: |S<T>|S<T>, s: S<T>) {
+        f(s);
+    }
+    fun receiver<T>(self: S<T>, y: T) {
+        self.x = y;
+    }
+    fun receiver_more_generics<T, R>(self: S<T>, _y: R) {
+    }
+    fun receiver_needs_type_args<T, R>(self: S<T>, _y: T) {
+        abort 1
+    }
+    fun receiver_ref<T>(self: &S<T>, _y: T) {
+    }
+    fun receiver_ref_mut<T>(self: &mut S<T>, y: T) {
+        self.x = y
+    }
+    fun test_call_styles(s: S<u64>, x: u64) {
+        receiver<u64>(s, x);
+        receiver_ref<u64>(&s, x);
+        receiver_ref_mut<u64>(&mut s, x);
+        receiver_more_generics<u64,u64>(s, 22);
+        receiver_needs_type_args<u64,u8>(s, x);
+    }
+    fun test_receiver_inference(s: S<u64>) {
+        let (s) = (s);
+        {
+            let (s) = (s);
+            id<u64>(s)
+        };
+    }
+}

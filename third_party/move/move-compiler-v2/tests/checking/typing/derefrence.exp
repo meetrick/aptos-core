@@ -23,3 +23,27 @@ module 0x8675309::M {
         Tuple()
     }
 } // end 0x8675309::M
+
+// -- Sourcified model before bytecode pipeline
+module 0x8675309::M {
+    struct S has copy, drop {
+        f: u64,
+        x: X,
+    }
+    struct X has copy, drop {
+    }
+    fun t0(x: &u64, x_mut: &mut u64, s: &S, s_mut: &mut S) {
+        *x;
+        *x_mut;
+        *s;
+        *&s.f;
+        s.f;
+        *&s.x;
+        *s_mut;
+        *&s_mut.f;
+        *&mut s_mut.f;
+        s_mut.f;
+        *&s_mut.x;
+        *&mut s_mut.x;
+    }
+}

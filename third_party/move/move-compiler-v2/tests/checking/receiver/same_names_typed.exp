@@ -35,3 +35,33 @@ module 0x42::c {
         }
     }
 } // end 0x42::c
+
+// -- Sourcified model before bytecode pipeline
+module 0x42::b {
+    struct MyOtherList {
+        len: u64,
+    }
+    public fun len(self: &MyOtherList): u64 {
+        self.len
+    }
+}
+module 0x42::a {
+    struct MyList {
+        len: u64,
+    }
+    public fun len(self: &MyList): u64 {
+        self.len
+    }
+}
+module 0x42::c {
+    use 0x42::b;
+    use 0x42::a;
+    inline fun foo(f: |(a::MyList, b::MyOtherList)|, x: a::MyList, y: b::MyOtherList) {
+        f(x, y)
+    }
+    fun test(x: a::MyList, y: b::MyOtherList) {
+        let (x,y) = (x, y);
+        let (x,y) = (x, y);
+        if (a::len(&x) + b::len(&y) == 1) () else abort 1
+    }
+}

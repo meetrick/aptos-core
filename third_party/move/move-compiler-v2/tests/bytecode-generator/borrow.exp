@@ -61,6 +61,41 @@ module 0x42::borrow {
     }
 } // end 0x42::borrow
 
+// -- Sourcified model before bytecode pipeline
+module 0x42::borrow {
+    struct S {
+        f: u64,
+    }
+    fun field(s: &S): u64 {
+        let r = &s.f;
+        *r
+    }
+    fun local(param: u64): u64 {
+        let r = &33;
+        *r
+    }
+    fun param(param: u64): u64 {
+        let r = &param;
+        *r
+    }
+    fun mut_field(s: &mut S): u64 {
+        let r = &mut s.f;
+        *r = 22;
+        *r
+    }
+    fun mut_local(param: u64): u64 {
+        let local = 33;
+        let r = &mut local;
+        *r = 22;
+        *r
+    }
+    fun mut_param(param: u64): u64 {
+        let r = &mut param;
+        *r = 22;
+        *r
+    }
+}
+
 ============ initial bytecode ================
 
 [variant baseline]

@@ -50,3 +50,30 @@ module 0x42::simple_map {
         }
     }
 } // end 0x42::simple_map
+
+// -- Sourcified model before bytecode pipeline
+module 0x42::simple_map {
+    struct Element<Key, Value> has copy, drop, store {
+        key: Key,
+        value: Value,
+    }
+    struct SimpleMap<Key, Value> has copy, drop, store {
+        data: vector<Element<Key, Value>>,
+    }
+    public fun borrow<Key: store, Value: store>(map: &SimpleMap<Key, Value>, key: &Key): &Value {
+        let maybe_idx = find<Key,Value>(map, key);
+        if (option::is_some<u64>(&maybe_idx)) () else abort error::invalid_argument(2);
+        let idx = option::extract<u64>(&mut maybe_idx);
+        &vector::borrow<Element<Key, Value>>(&map.data, idx).value
+    }
+    fun find<Key: store, Value: store>(map: &SimpleMap<Key, Value>, key: &Key): option::Option<u64> {
+        let leng = vector::length<Element<Key, Value>>(&map.data);
+        let i = 0;
+        while (i < leng) {
+            let element = vector::borrow<Element<Key, Value>>(&map.data, i);
+            if (&element.key == key) return option::some<u64>(i);
+            i = i + 1;
+        };
+        option::none<u64>()
+    }
+}

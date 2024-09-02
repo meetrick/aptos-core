@@ -25,6 +25,29 @@ module 0xc0ffee::m {
     }
 } // end 0xc0ffee::m
 
+// -- Sourcified model before bytecode pipeline
+module 0xc0ffee::m {
+    struct S has drop {
+        x: u64,
+    }
+    fun foo(self: &mut S): u64 {
+        {
+            let $t1 = &mut self.x;
+            *$t1 = *$t1 + 1
+        };
+        1
+    }
+    public fun test(): u64 {
+        let s = S{x: 0};
+        {
+            let $t2 = foo(&mut s);
+            let $t1 = &mut s.x;
+            *$t1 = *$t1 + $t2
+        };
+        s.x
+    }
+}
+
 ============ initial bytecode ================
 
 [variant baseline]

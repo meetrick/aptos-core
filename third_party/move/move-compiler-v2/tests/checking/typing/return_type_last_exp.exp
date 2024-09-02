@@ -13,3 +13,17 @@ module 0x8675309::M {
         Tuple(0, false, pack M::R(false))
     }
 } // end 0x8675309::M
+
+// -- Sourcified model before bytecode pipeline
+module 0x8675309::M {
+    struct R {
+    }
+    fun t0() {
+    }
+    fun t1(): u64 {
+        0
+    }
+    fun t2(): (u64, bool, R) {
+        (0, false, R{dummy_field: false})
+    }
+}

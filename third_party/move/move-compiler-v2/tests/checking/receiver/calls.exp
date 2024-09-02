@@ -25,3 +25,29 @@ module 0x42::m {
         }
     }
 } // end 0x42::m
+
+// -- Sourcified model before bytecode pipeline
+module 0x42::m {
+    struct S {
+        x: u64,
+    }
+    inline fun inline_receiver_ref_mut(self: &mut S, y: u64): u64 {
+        self.x + y
+    }
+    fun receiver(self: S, y: u64): u64 {
+        self.x + y
+    }
+    fun receiver_ref(self: &S, y: u64): u64 {
+        self.x + y
+    }
+    fun receiver_ref_mut(self: &mut S, y: u64): u64 {
+        self.x + y
+    }
+    fun test_call_styles(s: S): u64 {
+        receiver(s, 1);
+        receiver_ref(&s, 1);
+        receiver_ref_mut(&mut s, 1);
+        let (self,y) = (&mut s, 1);
+        self.x + 1
+    }
+}

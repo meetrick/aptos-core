@@ -22,3 +22,19 @@ module 0x8675309::M {
         }
     }
 } // end 0x8675309::M
+
+// -- Sourcified model before bytecode pipeline
+module 0x8675309::M {
+    struct R {
+    }
+    struct S has drop {
+    }
+    fun t() {
+        let u = 0;
+        let s = S{dummy_field: false};
+        let r = R{dummy_field: false};
+        move u;
+        move s;
+        R{dummy_field: _} = move r;
+    }
+}

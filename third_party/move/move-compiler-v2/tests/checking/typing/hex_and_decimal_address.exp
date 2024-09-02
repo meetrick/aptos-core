@@ -19,3 +19,22 @@ module <SELF>_0 {
         Tuple()
     }
 } // end <SELF>_0
+
+// -- Sourcified model before bytecode pipeline
+module 0x7b::M {
+    struct S has copy, drop {
+    }
+    public fun s(): S {
+        S{dummy_field: false}
+    }
+    public fun take(_s: S) {
+    }
+}
+script {
+    fun main() {
+        M::take(M::s());
+        M::take(M::s());
+        M::take(M::s());
+        M::take(M::s());
+    }
+}

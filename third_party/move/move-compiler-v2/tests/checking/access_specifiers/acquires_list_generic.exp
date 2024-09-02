@@ -15,3 +15,18 @@ module 0x42::M {
         Abort(0)
     }
 } // end 0x42::M
+
+// -- Sourcified model before bytecode pipeline
+module 0x42::M {
+    struct B<phantom T> {
+    }
+    struct CupC<phantom T> {
+    }
+    struct R {
+    }
+    fun foo()
+        acquires B<CupC<R>>
+    {
+        abort 0
+    }
+}

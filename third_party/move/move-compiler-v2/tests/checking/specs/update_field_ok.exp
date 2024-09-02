@@ -17,3 +17,14 @@ module 0x42::update_field_ok {
         update update_field_ok::R.x<update_field_ok::R>(r, 1)
     }
 } // end 0x42::update_field_ok
+
+// -- Sourcified model before bytecode pipeline
+module 0x42::update_field_ok {
+    struct R {
+        x: u64,
+        y: u64,
+    }
+    fun f(r: &mut R) {
+        r.x = 1;
+    }
+}

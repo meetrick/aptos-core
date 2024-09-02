@@ -30,5 +30,26 @@ module 0x1::Test {
     }
 } // end 0x1::Test
 
+// -- Sourcified model before bytecode pipeline
+module 0x1::Test {
+    struct S has drop {
+        x: u8,
+    }
+    fun foo(xs: vector<S>) {
+        let sum = 0u8;
+        {
+            let (v) = (&xs);
+            let i = 0;
+            while (i < vector::length<S>(v)) {
+                {
+                    let (e) = (vector::borrow<S>(v, i));
+                    sum = sum + e.x;
+                };
+                i = i + 1
+            }
+        };
+    }
+}
+
 
 ============ bytecode verification succeeded ========
