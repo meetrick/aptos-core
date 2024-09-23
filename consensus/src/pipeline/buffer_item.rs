@@ -20,7 +20,8 @@ use aptos_types::{
     block_info::BlockInfo,
     epoch_state::EpochState,
     ledger_info::{
-        LedgerInfo, LedgerInfoWithMixedSignatures, LedgerInfoWithSignatures, VerificationStatus,
+        LedgerInfo, LedgerInfoWithSignatures, LedgerInfoWithUnverifiedSignatures,
+        VerificationStatus,
     },
 };
 use futures::future::BoxFuture;
@@ -57,7 +58,7 @@ fn verify_signatures(
     // by Law, Laurie and Matt, Brian J., in Cryptography and Coding, 2007).
     if let Ok(aggregated_signature) = epoch_state
         .verifier
-        .aggregate_signatures(&unverified_signatures)
+        .aggregate_signatures(unverified_signatures.signatures_iter())
     {
         if epoch_state
             .verifier
@@ -99,11 +100,9 @@ fn generate_executed_item_from_ordered(
     order_vote_enabled: bool,
 ) -> BufferItem {
     debug!("{} advance to executed from ordered", commit_info);
-    let mut partial_commit_proof = LedgerInfoWithMixedSignatures::new(generate_commit_ledger_info(
-        &commit_info,
-        &ordered_proof,
-        order_vote_enabled,
-    ));
+    let mut partial_commit_proof = LedgerInfoWithUnverifiedSignatures::new(
+        generate_commit_ledger_info(&commit_info, &ordered_proof, order_vote_enabled),
+    );
     for (author, sig) in verified_signatures.signatures() {
         partial_commit_proof.add_signature(*author, sig.clone(), VerificationStatus::Verified);
     }
@@ -123,7 +122,7 @@ fn aggregate_commit_proof(
 ) -> LedgerInfoWithSignatures {
     let aggregated_sig = epoch_state
         .verifier
-        .aggregate_signatures(verified_signatures)
+        .aggregate_signatures(verified_signatures.signatures_iter())
         .expect("Failed to generate aggregated signature");
     LedgerInfoWithSignatures::new(commit_ledger_info.clone(), aggregated_sig)
 }
@@ -142,7 +141,7 @@ pub struct OrderedItem {
 
 pub struct ExecutedItem {
     pub executed_blocks: Vec<PipelinedBlock>,
-    pub partial_commit_proof: LedgerInfoWithMixedSignatures,
+    pub partial_commit_proof: LedgerInfoWithUnverifiedSignatures,
     pub callback: StateComputerCommitCallBackType,
     pub commit_info: BlockInfo,
     pub ordered_proof: LedgerInfoWithSignatures,
@@ -150,7 +149,7 @@ pub struct ExecutedItem {
 
 pub struct SignedItem {
     pub executed_blocks: Vec<PipelinedBlock>,
-    pub partial_commit_proof: LedgerInfoWithMixedSignatures,
+    pub partial_commit_proof: LedgerInfoWithUnverifiedSignatures,
     pub callback: StateComputerCommitCallBackType,
     pub commit_vote: CommitVote,
     pub rb_handle: Option<(Instant, DropGuard)>,
@@ -182,9 +181,10 @@ impl BufferItem {
         ordered_blocks: Vec<PipelinedBlock>,
         ordered_proof: LedgerInfoWithSignatures,
         callback: StateComputerCommitCallBackType,
+        unverified_signatures: PartialSignatures,
     ) -> Self {
         Self::Ordered(Box::new(OrderedItem {
-            unverified_signatures: PartialSignatures::empty(),
+            unverified_signatures,
             commit_proof: None,
             callback,
             ordered_blocks,
@@ -390,7 +390,7 @@ impl BufferItem {
             Self::Signed(signed_item) => {
                 if signed_item
                     .partial_commit_proof
-                    .check_voting_power(&epoch_state.verifier)
+                    .check_voting_power(&epoch_state.verifier, true)
                     .is_ok()
                 {
                     let _time = counters::VERIFY_MSG
@@ -413,7 +413,7 @@ impl BufferItem {
             Self::Executed(executed_item) => {
                 if executed_item
                     .partial_commit_proof
-                    .check_voting_power(&epoch_state.verifier)
+                    .check_voting_power(&epoch_state.verifier, true)
                     .is_ok()
                 {
                     let _time = counters::VERIFY_MSG
