@@ -860,7 +860,10 @@ Aborts if <code>i</code> is out of bounds.
 
 <pre><code><b>public</b> <b>fun</b> <a href="vector.md#0x1_vector_replace">replace</a>&lt;Element&gt;(self: &<b>mut</b> <a href="vector.md#0x1_vector">vector</a>&lt;Element&gt;, i: u64, val: Element): Element {
     <b>let</b> last_idx = <a href="vector.md#0x1_vector_length">length</a>(self);
+<<<<<<< HEAD
     <b>assert</b>!(i &lt; last_idx, <a href="vector.md#0x1_vector_EINDEX_OUT_OF_BOUNDS">EINDEX_OUT_OF_BOUNDS</a>);
+=======
+>>>>>>> cc00da9112 (making key generic)
     <a href="vector.md#0x1_vector_push_back">push_back</a>(self, val);
     <a href="vector.md#0x1_vector_swap">swap</a>(self, i, last_idx);
     <a href="vector.md#0x1_vector_pop_back">pop_back</a>(self)
