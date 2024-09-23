@@ -376,6 +376,7 @@ impl LedgerInfoWithVerifiedSignatures {
     }
 }
 
+#[derive(Debug, Clone)]
 pub enum VerificationStatus {
     Verified,
     Unverified,

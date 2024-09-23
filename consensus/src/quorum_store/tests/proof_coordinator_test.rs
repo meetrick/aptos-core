@@ -164,6 +164,6 @@ async fn test_proof_coordinator_with_unverified_signatures() {
 
         let proofs = proof_msg.take();
         assert_eq!(proofs[0].digest(), digest);
-        assert_eq!(epoch_state.verifier.malicious_authors().len(), 3);
+        assert_eq!(epoch_state.verifier.pessimistic_verify_set().len(), 3);
     }
 }

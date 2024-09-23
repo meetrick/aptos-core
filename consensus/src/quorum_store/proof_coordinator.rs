@@ -137,6 +137,11 @@ impl IncrementalProofState {
             .is_ok()
     }
 
+    fn merge_signatures(&mut self, ) {
+
+    }
+
+
     fn aggregate_and_verify(
         &mut self,
         epoch_state: Arc<EpochState>,
@@ -155,7 +160,7 @@ impl IncrementalProofState {
 
         let aggregated_sig = epoch_state
             .verifier
-            .aggregate_signatures(&all_signatures)
+            .aggregate_signatures(all_signatures.signatures_iter())
             .map_err(|e| {
                 error!(
                     "Unable to aggregate signatures in proof coordinator. err = {:?}",
@@ -208,7 +213,7 @@ impl IncrementalProofState {
                 self.unverified_signatures = PartialSignatures::empty();
                 let aggregated_sig = epoch_state
                     .verifier
-                    .aggregate_signatures(&self.verified_signatures)
+                    .aggregate_signatures(self.verified_signatures.signatures_iter())
                     .map_err(|e| {
                         error!(
                             "Unable to aggregate signatures in proof coordinator err = {:?}",
