@@ -87,7 +87,7 @@ module aptos_std::table {
         drop_unchecked_box<K, V, Box<V>>(self)
     }
 
-    public(friend) fun destroy<K: copy + drop, V>(self: Table<K, V>) {
+    public fun destroy_empty<K: copy + drop, V>(self: Table<K, V>) {
         destroy_empty_box<K, V, Box<V>>(&self);
         drop_unchecked_box<K, V, Box<V>>(self)
     }
