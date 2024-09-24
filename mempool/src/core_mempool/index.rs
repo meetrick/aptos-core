@@ -513,6 +513,13 @@ impl ParkingLotIndex {
     pub(crate) fn size(&self) -> usize {
         self.size
     }
+
+    pub(crate) fn get_addresses(&self) -> Vec<(AccountAddress, usize)> {
+        self.data
+            .iter()
+            .map(|(addr, txns)| (*addr, txns.len()))
+            .collect::<Vec<(AccountAddress, usize)>>()
+    }
 }
 
 /// Logical pointer to `MempoolTransaction`.
