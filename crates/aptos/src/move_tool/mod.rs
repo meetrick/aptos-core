@@ -1569,13 +1569,16 @@ async fn submit_chunked_publish_transactions(
         match result {
             Ok(tx_summary) => {
                 let tx_hash = tx_summary.transaction_hash.to_string();
-                let status = tx_summary.success.map_or("".to_string(), |success| {
-                    if success {
-                        "Success".to_string()
-                    } else {
-                        "Failed".to_string()
-                    }
-                });
+                let status = tx_summary.success.map_or_else(
+                    || "".to_string(),
+                    |success| {
+                        if success {
+                            "Success".to_string()
+                        } else {
+                            "Failed".to_string()
+                        }
+                    },
+                );
                 println!("Transaction executed: {} ({})\n", status, &tx_hash);
                 tx_hashes.push(tx_hash);
                 publishing_result = Ok(tx_summary);

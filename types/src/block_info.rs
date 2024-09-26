@@ -139,7 +139,8 @@ impl BlockInfo {
 
     /// The epoch after this block committed
     pub fn next_block_epoch(&self) -> u64 {
-        self.next_epoch_state().map_or(self.epoch(), |e| e.epoch)
+        self.next_epoch_state()
+            .map_or_else(|| self.epoch, |e| e.epoch)
     }
 
     pub fn change_timestamp(&mut self, timestamp: u64) {
@@ -227,7 +228,7 @@ impl Display for BlockInfo {
             self.executed_state_id(),
             self.version(),
             self.timestamp_usecs(),
-            self.next_epoch_state.as_ref().map_or("None".to_string(), |epoch_state| format!("{}", epoch_state)),
+            self.next_epoch_state.as_ref().map_or_else(|| "None".to_string(), |epoch_state| format!("{}", epoch_state)),
         )
     }
 }

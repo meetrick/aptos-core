@@ -116,13 +116,16 @@ where
         let sync_view = LatestView::new(base_view, ViewState::Sync(parallel_state), idx_to_execute);
         let execute_result = executor.execute_transaction(&sync_view, txn, idx_to_execute);
 
-        let mut prev_modified_keys = last_input_output
-            .modified_keys(idx_to_execute)
-            .map_or(HashMap::new(), |keys| keys.collect());
+        let mut prev_modified_keys = match last_input_output.modified_keys(idx_to_execute) {
+            Some(keys) => keys.collect(),
+            None => HashMap::new(),
+        };
 
-        let mut prev_modified_delayed_fields = last_input_output
-            .delayed_field_keys(idx_to_execute)
-            .map_or(HashSet::new(), |keys| keys.collect());
+        let mut prev_modified_delayed_fields =
+            match last_input_output.delayed_field_keys(idx_to_execute) {
+                Some(keys) => keys.collect(),
+                None => HashSet::new(),
+            };
 
         let mut read_set = sync_view.take_parallel_reads();
 

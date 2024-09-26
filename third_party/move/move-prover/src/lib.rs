@@ -280,9 +280,10 @@ pub fn create_and_process_bytecode(options: &Options, env: &GlobalEnv) -> Functi
     let output_dir = Path::new(&options.output_path)
         .parent()
         .expect("expect the parent directory of the output path to exist");
-    let output_prefix = options.move_sources.first().map_or("bytecode", |s| {
-        Path::new(s).file_name().unwrap().to_str().unwrap()
-    });
+    let output_prefix = options.move_sources.first().map_or_else(
+        || "bytecode",
+        |s| Path::new(s).file_name().unwrap().to_str().unwrap(),
+    );
 
     // Add function targets for all functions in the environment.
     for module_env in env.get_modules() {

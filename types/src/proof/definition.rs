@@ -397,7 +397,7 @@ impl SparseMerkleProof {
 
         let current_hash = self
             .leaf
-            .map_or(*SPARSE_MERKLE_PLACEHOLDER_HASH, |leaf| leaf.hash());
+            .map_or_else(|| *SPARSE_MERKLE_PLACEHOLDER_HASH, |leaf| leaf.hash());
         let actual_root_hash = self
             .siblings
             .iter()

@@ -337,7 +337,7 @@ impl<T: Hash + Clone + Debug + Eq + Serialize, V: TransactionWrite> VersionedGro
 
         self.versioned_map
             .get(tag)
-            .ok_or(common_error())
+            .ok_or_else(common_error)
             .and_then(|tree| {
                 match tree
                     .range(ShiftedTxnIndex::zero_idx()..ShiftedTxnIndex::new(txn_idx))

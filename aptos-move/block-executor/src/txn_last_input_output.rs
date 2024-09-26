@@ -34,12 +34,15 @@ macro_rules! forward_on_success_or_skip_rest {
         $self.outputs[$txn_idx as usize]
             .load()
             .as_ref()
-            .map_or(vec![], |txn_output| match txn_output.as_ref() {
-                ExecutionStatus::Success(t) | ExecutionStatus::SkipRest(t) => t.$f(),
-                ExecutionStatus::Abort(_)
-                | ExecutionStatus::SpeculativeExecutionAbortError(_)
-                | ExecutionStatus::DelayedFieldsCodeInvariantError(_) => vec![],
-            })
+            .map_or_else(
+                || vec![],
+                |txn_output| match txn_output.as_ref() {
+                    ExecutionStatus::Success(t) | ExecutionStatus::SkipRest(t) => t.$f(),
+                    ExecutionStatus::Abort(_)
+                    | ExecutionStatus::SpeculativeExecutionAbortError(_)
+                    | ExecutionStatus::DelayedFieldsCodeInvariantError(_) => vec![],
+                },
+            )
     }};
 }
 
@@ -353,9 +356,9 @@ impl<T: Transaction, O: TransactionOutput<Txn = T>, E: Debug + Send + Clone>
         &self,
         txn_idx: TxnIndex,
     ) -> Box<dyn Iterator<Item = (T::Event, Option<MoveTypeLayout>)>> {
-        self.outputs[txn_idx as usize].load().as_ref().map_or(
-            Box::new(empty::<(T::Event, Option<MoveTypeLayout>)>()),
-            |txn_output| match txn_output.as_ref() {
+        match self.outputs[txn_idx as usize].load().as_ref() {
+            None => Box::new(empty::<(T::Event, Option<MoveTypeLayout>)>()),
+            Some(txn_output) => match txn_output.as_ref() {
                 ExecutionStatus::Success(t) | ExecutionStatus::SkipRest(t) => {
                     let events = t.get_events();
                     Box::new(events.into_iter())
@@ -366,7 +369,7 @@ impl<T: Transaction, O: TransactionOutput<Txn = T>, E: Debug + Send + Clone>
                     Box::new(empty::<(T::Event, Option<MoveTypeLayout>)>())
                 },
             },
-        )
+        }
     }
 
     pub(crate) fn record_finalized_group(

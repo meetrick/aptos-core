@@ -211,11 +211,10 @@ impl Mempool {
             );
 
             if insertion_info.park_time.is_none() {
-                let use_case_label = tracked_use_case
-                    .as_ref()
-                    .map_or("entry_user_other", |(_, use_case_name)| {
-                        use_case_name.as_str()
-                    });
+                let use_case_label = tracked_use_case.as_ref().map_or_else(
+                    || "entry_user_other",
+                    |(_, use_case_name)| use_case_name.as_str(),
+                );
 
                 counters::TXN_E2E_USE_CASE_COMMIT_LATENCY
                     .with_label_values(&[

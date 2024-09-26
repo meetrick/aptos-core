@@ -66,8 +66,8 @@ impl StateKey {
             return Err(StateKeyDecodeErr::EmptyInput);
         }
         let tag = val[0];
-        let state_key_tag =
-            StateKeyTag::from_u8(tag).ok_or(StateKeyDecodeErr::UnknownTag { unknown_tag: tag })?;
+        let state_key_tag = StateKeyTag::from_u8(tag)
+            .ok_or_else(|| StateKeyDecodeErr::UnknownTag { unknown_tag: tag })?;
         let myself = match state_key_tag {
             StateKeyTag::AccessPath => {
                 let AccessPath { address, path } = bcs::from_bytes(&val[1..])?;

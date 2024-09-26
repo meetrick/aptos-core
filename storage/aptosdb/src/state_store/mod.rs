@@ -191,15 +191,18 @@ impl DbReader for StateDb {
     }
 
     fn get_state_storage_usage(&self, version: Option<Version>) -> Result<StateStorageUsage> {
-        version.map_or(Ok(StateStorageUsage::zero()), |version| {
-            Ok(match self.ledger_db.metadata_db().get_usage(version) {
-                Ok(data) => data,
-                _ => {
-                    ensure!(self.skip_usage, "VersionData at {version} is missing.");
-                    StateStorageUsage::new_untracked()
-                },
-            })
-        })
+        version.map_or_else(
+            || Ok(StateStorageUsage::zero()),
+            |version| {
+                Ok(match self.ledger_db.metadata_db().get_usage(version) {
+                    Ok(data) => data,
+                    _ => {
+                        ensure!(self.skip_usage, "VersionData at {version} is missing.");
+                        StateStorageUsage::new_untracked()
+                    },
+                })
+            },
+        )
     }
 }
 
