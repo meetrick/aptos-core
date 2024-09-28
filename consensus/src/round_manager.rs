@@ -1354,14 +1354,16 @@ impl RoundManager {
                             qc, e
                         );
                     } else {
-                        if !self.randomness_config.skip_non_rand_blocks()
-                        || self.block_store
-                            .get_block(vote.vote_data().proposed().id())
-                            .map_or(true, |block| !block.require_randomness())
-                        {
-                            // still send if don't have the block yet
+                        if self.randomness_config.skip_non_rand_blocks() {
+                            if let Some(block) = self.block_store.get_block(vote.vote_data().proposed().id()) {
+                                if !block.require_randomness() {
+                                    self.broadcast_precommit_vote(vote.vote_data().proposed().clone(), HashValue::zero()).await;
+                                } else {
+                                    self.broadcast_fast_shares(qc.certified_block()).await;
+                                }
+                            }
+                        } else {
                             self.broadcast_fast_shares(qc.certified_block()).await;
-                            self.broadcast_precommit_vote(vote.vote_data().proposed().clone(), HashValue::zero()).await;
                         }
                     }
                 }
