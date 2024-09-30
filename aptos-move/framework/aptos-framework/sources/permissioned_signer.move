@@ -215,7 +215,7 @@ module aptos_framework::permissioned_signer {
         if(!exists<PermStorage>(addr)) {
             return false
         };
-        smart_table::contains(&mut borrow_global_mut<PermStorage>(addr).perms, copyable_any::pack(perm))
+        smart_table::contains(&borrow_global<PermStorage>(addr).perms, copyable_any::pack(perm))
     }
 
     public fun check_permission_capacity_above<PermKey: copy + drop + store>(
