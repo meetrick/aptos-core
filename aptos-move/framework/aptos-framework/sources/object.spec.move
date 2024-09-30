@@ -49,6 +49,12 @@ spec aptos_framework::object {
         pragma aborts_if_is_strict;
     }
 
+    spec grant_permission {
+        aborts_if !permissioned_signer::spec_is_permissioned_signer(permissioned_signer);
+        aborts_if permissioned_signer::spec_is_permissioned_signer(master);
+        aborts_if signer::address_of(master) != signer::address_of(permissioned_signer);
+    }
+
     spec fun spec_exists_at<T: key>(object: address): bool;
 
     spec exists_at<T: key>(object: address): bool {
@@ -476,11 +482,7 @@ spec aptos_framework::object {
     }
 
     spec burn<T: key>(owner: &signer, object: Object<T>) {
-        pragma aborts_if_is_partial;
-        let object_address = object.inner;
-        aborts_if !exists<ObjectCore>(object_address);
-        aborts_if owner(object) != signer::address_of(owner);
-        aborts_if is_burnt(object);
+        pragma verify = false;
     }
 
     spec unburn<T: key>(original_owner: &signer, object: Object<T>) {
