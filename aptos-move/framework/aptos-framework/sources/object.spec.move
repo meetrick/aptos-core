@@ -483,7 +483,12 @@ spec aptos_framework::object {
     }
 
     spec burn<T: key>(owner: &signer, object: Object<T>) {
-        pragma verify = false;
+        pragma aborts_if_is_partial;
+        let object_address = object.inner;
+        aborts_if !exists<ObjectCore>(object_address);
+        aborts_if owner(object) != signer::address_of(owner);
+        aborts_if is_burnt(object);
+        ensures global<ObjectCore>(object.inner).owner == BURN_ADDRESS;
     }
 
     spec unburn<T: key>(original_owner: &signer, object: Object<T>) {
