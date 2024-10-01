@@ -82,28 +82,22 @@ spec aptos_framework::permissioned_signer {
     capacity: u256,
     perm: PermKey
     ) {
-        pragma verify = false;
-        // TODO: cannot verify this because the native implementation of signer
-        // in boogie is defined as a wrapper of an address so that,
-        // if signer::address_of(permissioned) == signer::address_of(master)
-        // then permissioned == master.
 
-        // use aptos_std::type_info;
-        // use std::bcs;
-        // aborts_if !spec_is_permissioned_signer(permissioned);
-        // aborts_if spec_is_permissioned_signer(master);
-        // let permission_signer_addr = signer::address_of(permissioned);
-        // let master_addr = signer::address_of(master);
-        // aborts_if permission_signer_addr != master_addr;
-        // ensures exists<PermStorage>(permission_signer_addr);
+        use aptos_std::type_info;
+        use std::bcs;
+        pragma aborts_if_is_partial;
+        aborts_if !spec_is_permissioned_signer(permissioned);
+        aborts_if spec_is_permissioned_signer(master);
+        aborts_if signer::address_of(permissioned) != signer::address_of(master);
+        ensures exists<PermStorage>(signer::address_of(spec_permission_signer(permissioned)));
         // let perms = global<PermStorage>(permission_signer_addr).perms;
         // let post post_perms = global<PermStorage>(permission_signer_addr).perms;
         // let key = Any {
         //     type_name: type_info::type_name<SmartTable<Any, u256>>(),
         //     data: bcs::serialize(perm)
         // };
-        // // ensures smart_table::spec_contains(perms, key) ==>
-        // //     smart_table::spec_get(post_perms, key) == old(smart_table::spec_get(perms, key)) + capacity;
+        // ensures smart_table::spec_contains(perms, key) ==>
+        //     smart_table::spec_get(post_perms, key) == old(smart_table::spec_get(perms, key)) + capacity;
         // ensures !smart_table::spec_contains(perms, key) ==>
         //     smart_table::spec_get(post_perms, key) == capacity;
     }
