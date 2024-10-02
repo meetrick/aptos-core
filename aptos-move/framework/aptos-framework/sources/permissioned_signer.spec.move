@@ -82,9 +82,8 @@ spec aptos_framework::permissioned_signer {
     capacity: u256,
     perm: PermKey
     ) {
-
-        use aptos_std::type_info;
-        use std::bcs;
+        // use aptos_std::type_info;
+        // use std::bcs;
         pragma aborts_if_is_partial;
         aborts_if !spec_is_permissioned_signer(permissioned);
         aborts_if spec_is_permissioned_signer(master);
@@ -106,8 +105,8 @@ spec aptos_framework::permissioned_signer {
     s: &signer,
     perm: PermKey
     ): bool {
-        use aptos_std::type_info;
-        use std::bcs;
+        // use aptos_std::type_info;
+        // use std::bcs;
         let permissioned_signer_addr = signer::address_of(spec_permission_signer(s));
         ensures !spec_is_permissioned_signer(s) ==> result == true;
         ensures (spec_is_permissioned_signer(s) && !exists<PermStorage>(permissioned_signer_addr)) ==> result == false;
