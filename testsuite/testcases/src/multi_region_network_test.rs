@@ -19,6 +19,7 @@ use std::{collections::BTreeMap, sync::Arc};
 /// is measuring TCP bandwidth only which is primarily affected by RTT, and not the actual bandwidth
 /// across the regions, which would vary according to competing traffic, etc.
 const FOUR_REGION_LINK_STATS: &[u8] = include_bytes!("data/four_region_link_stats.csv");
+const SIX_REGION_LINK_STATS: &[u8] = include_bytes!("data/six_region_link_stats.csv");
 /// The two regions were chosen as the most distant regions among the four regions set.
 const TWO_REGION_LINK_STATS: &[u8] = include_bytes!("data/two_region_link_stats.csv");
 
@@ -79,7 +80,7 @@ fn create_link_stats_table_with_peer_groups(
         "At least 2 regions are required for inter-region network chaos."
     );
     assert!(
-        number_of_regions <= 4,
+        number_of_regions <= 6,
         "ChaosMesh only supports simulating up to 4 regions."
     );
 
@@ -223,7 +224,7 @@ pub struct MultiRegionNetworkEmulationConfig {
 impl Default for MultiRegionNetworkEmulationConfig {
     fn default() -> Self {
         Self {
-            link_stats_table: get_link_stats_table(FOUR_REGION_LINK_STATS),
+            link_stats_table: get_link_stats_table(SIX_REGION_LINK_STATS),
             inter_region_config: InterRegionNetEmConfig::default(),
             intra_region_config: Some(IntraRegionNetEmConfig::default()),
         }
@@ -234,6 +235,20 @@ impl MultiRegionNetworkEmulationConfig {
     pub fn two_region() -> Self {
         Self {
             link_stats_table: get_link_stats_table(TWO_REGION_LINK_STATS),
+            ..Default::default()
+        }
+    }
+
+    pub fn four_region() -> Self {
+        Self {
+            link_stats_table: get_link_stats_table(FOUR_REGION_LINK_STATS),
+            ..Default::default()
+        }
+    }
+
+    pub fn six_region() -> Self {
+        Self {
+            link_stats_table: get_link_stats_table(SIX_REGION_LINK_STATS),
             ..Default::default()
         }
     }
